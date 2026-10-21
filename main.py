@@ -1,5 +1,5 @@
 from mapbook_shared.model import users
-from mapbook_shared.controller import show_users, add_user, remove_user, update_user
+from mapbook_shared.controller import show_users, add_user, remove_user, update_user, generate_map
 
 while True:
     print("=" * 50)
@@ -9,6 +9,7 @@ while True:
     print("* 2 = Add user")
     print("* 3 = Remove user")
     print("* 4 = Update user")
+    print("* 5 = Generate map")
     choose: int = int(input("Podaj opcję: "))
     if choose == 0: break
     elif choose == 1: show_users(users)
@@ -19,5 +20,6 @@ while True:
         else:
             print('Nie ma takiego delikwenta')
     elif choose == 4: update_user(users)
+    elif choose == 5: generate_map(users)
     else:
         print("Podaj poprawną opcję")
