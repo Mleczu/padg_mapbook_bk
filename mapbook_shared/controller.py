@@ -12,3 +12,14 @@ def remove_user(user_list: list)->bool:
             user_list.remove(user)
             return True
     return False
+
+def update_user(user_list: list)->None:
+    name: str = input('Podaj stare imie: ')
+    for user in user_list:
+        if user['name'] == name:
+            user['name'] = input('Podaj imie: ')
+            user['location'] = input('Podaj lokalizacje: ')
+            user['posts'] = int(input('Podaj liczbe postów: '))
+            return
+
+    print("Nie znaleziono usera po imieniu.")
