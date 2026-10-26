@@ -4,7 +4,4 @@ users: list = [
     {'name': 'Natalia', 'posts': 10000, 'location': 'Białystok'},
     {'name': 'Mikołaj', 'posts': 1, 'location': 'Warszawa'},
     {'name': 'Emil', 'posts': 666, 'location': 'Łomża'}
-
 ]
-
-#TODO w tym miejscu ma zostać commitami dodany przez zaproszonych uzytkownikow wpis przez kazdego z nich
