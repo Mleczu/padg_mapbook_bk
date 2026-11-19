@@ -4,44 +4,61 @@ from mapbook_shared.controller import get_location
 
 users: list = []
 
+class User:
+    def __init__(self, name: str, location: str, posts: int):
+        self.name = name
+        self.location = location
+        self.posts = posts
+
+        self.coords: list = get_location(location)
+        self.marker = map_widget.set_marker(self.coords[0], self.coords[1])
+
+    def __del__(self):
+        self.marker.delete()
+
+    def set_name(self, name: str):
+        self.name = name
+        self.marker.set_text(name)
+
+    def set_location(self, location: str):
+        self.location = location
+        self.coords: list = get_location(location)
+        self.marker.set_position(self.coords[0], self.coords[1])
+
+    def set_posts(self, posts: int):
+        self.posts = posts
+
+
 def show_users():
     listbox_lista_obiektow.delete(0, END)
 
     for idx, user in enumerate(users):
-        listbox_lista_obiektow.insert(idx, user['name'])
+        listbox_lista_obiektow.insert(idx, user.name)
 
 def add_user():
     name = entry_imie.get()
     location = entry_miejscowosc.get()
-    posts = entry_posty.get()
+    posts = int(entry_posty.get())
 
-    users.append({
-        'name': name,
-        'location': location,
-        'posts': int(posts),
-    })
+    user = User(name, location, posts)
+    users.append(user)
 
     entry_imie.delete(0, END)
     entry_miejscowosc.delete(0, END)
     entry_posty.delete(0, END)
 
     entry_imie.focus()
-
     show_users()
-
-    deg_x, deg_y = get_location(location)
-    marker = map_widget.set_marker(deg_x, deg_y, text=name)
-    users[len(users) - 1]['marker'] = marker
-    users[len(users) - 1]['deg'] = (deg_x, deg_y)
 
 def update_user(active_index: int):
     new_name = entry_imie.get()
     new_location = entry_miejscowosc.get()
     new_posts = entry_posty.get()
 
-    users[active_index]['name'] = new_name
-    users[active_index]['location'] = new_location
-    users[active_index]['posts'] = new_posts
+    user = users[active_index]
+    user.set_name(new_name)
+    user.set_location(new_location)
+    user.set_posts(new_posts)
 
     entry_imie.delete(0, END)
     entry_miejscowosc.delete(0, END)
@@ -50,11 +67,6 @@ def update_user(active_index: int):
     entry_imie.focus()
 
     show_users()
-
-    deg_x, deg_y = get_location(new_location)
-    marker = users[active_index]['marker']
-    marker.set_position(deg_x, deg_y)
-    marker.set_text(new_name)
 
     button_dodaj_obiekt.configure(text='Dodaj obiekt', command=add_user)
 
@@ -63,10 +75,7 @@ def remove_user():
     if not users[active_index]:
         return
 
-    marker = users[active_index]['marker']
-    marker.delete()
-
-    users.remove(users[active_index])
+    users.pop(active_index)
     show_users()
 
 def details_user():
@@ -78,10 +87,11 @@ def details_user():
         map_widget.set_position(52.23, 21)
         map_widget.set_zoom(6)
         return
-    name = users[active_index]['name']
-    location = users[active_index]['location']
-    posts = users[active_index]['posts']
-    deg = users[active_index]['deg']
+    user = users[active_index]
+    name = user.name
+    location = user.location
+    posts = user.posts
+    deg = user.coords
 
     label_imie_szczegoly_obiektu_wartosc.configure(text=name)
     label_miejscowosc_szczegoly_obiektu_wartosc.configure(text=location)
@@ -99,9 +109,11 @@ def edit_user():
     entry_miejscowosc.delete(0, END)
     entry_posty.delete(0, END)
 
-    entry_imie.insert(0, users[active_index]['name'])
-    entry_miejscowosc.insert(0, users[active_index]['location'])
-    entry_posty.insert(0, users[active_index]['posts'])
+    user = users[active_index]
+
+    entry_imie.insert(0, user.name)
+    entry_miejscowosc.insert(0, user.location)
+    entry_posty.insert(0, user.posts)
 
     button_dodaj_obiekt.configure(text='Zapisz zmiany', command=lambda: update_user(active_index))
 
