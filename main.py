@@ -32,6 +32,7 @@ def add_user():
     deg_x, deg_y = get_location(location)
     marker = map_widget.set_marker(deg_x, deg_y, text=name)
     users[len(users) - 1]['marker'] = marker
+    users[len(users) - 1]['deg'] = (deg_x, deg_y)
 
 def update_user(active_index: int):
     new_name = entry_imie.get()
@@ -74,14 +75,20 @@ def details_user():
         label_imie_szczegoly_obiektu_wartosc.configure(text='.....')
         label_miejscowosc_szczegoly_obiektu_wartosc.configure(text='.....')
         label_posty_szczegoly_obiektu_wartosc.configure(text='.....')
+        map_widget.set_position(52.23, 21)
+        map_widget.set_zoom(6)
         return
     name = users[active_index]['name']
     location = users[active_index]['location']
     posts = users[active_index]['posts']
+    deg = users[active_index]['deg']
 
     label_imie_szczegoly_obiektu_wartosc.configure(text=name)
     label_miejscowosc_szczegoly_obiektu_wartosc.configure(text=location)
     label_posty_szczegoly_obiektu_wartosc.configure(text=posts)
+
+    map_widget.set_position(deg[0], deg[1])
+    map_widget.set_zoom(12)
 
 def edit_user():
     active_index = listbox_lista_obiektow.index(ACTIVE)
